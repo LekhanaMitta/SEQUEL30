@@ -1,0 +1,212 @@
+SQL - Strucutured Query Language 
+
+I. Using SELECT statements:
+
+To use specific columns from the table:
+SELECT col1, col2, ... FROM Table_Name;
+
+To use all the columns from the table
+SELECT * FROM Table_Name;
+
+
+Given Table: Movies
+
+id	title	            director	        year	length_minutes
+1	Toy Story	        John Lasseter	    1995	81
+2	A Bug's Life	    John Lasseter	    1998	95
+3	Toy Story 2	        John Lasseter	    1999	93
+4	Monsters, Inc.	    Pete Docter	        2001	92
+5	Finding Nemo	    Andrew Stanton	    2003	107
+6	The Incredibles	    Brad Bird	        2004	116
+7	Cars	            John Lasseter	    2006	117
+8	Ratatouille	        Brad Bird	        2007	115
+9	WALL-E	            Andrew Stanton	    2008	104
+10	Up	                Pete Docter	        2009	101
+11	Toy Story 3	        Lee Unkrich	        2010	103
+12	Cars 2	            John Lasseter	    2011	120
+13	Brave	            Brenda Chapman	    2012	102
+14	Monsters University	Dan Scanlon	        2013	110
+
+Example Questions:
+1. Find the title of each film
+# SELECT Title FROM Movies;
+Output:
+Title
+Toy Story
+A Bug's Life
+Toy Story 2
+Monsters, Inc.
+Finding Nemo
+The Incredibles
+Cars
+Ratatouille
+WALL-E
+Up
+Toy Story 3
+Cars 2
+Brave
+
+2. Find the director of each film
+# SELECT director FROM Movies;
+Output:
+director
+John Lasseter
+John Lasseter
+John Lasseter
+Pete Docter
+Andrew Stanton
+Brad Bird
+John Lasseter
+Brad Bird
+Andrew Stanton
+Pete Docter
+Lee Unkrich
+John Lasseter
+Brenda Chapman
+Dan Scanlon
+
+3. Find the title and director of each film
+# SELECT title, director FROM Movies;
+Output:
+title	                director
+Toy Story	            John Lasseter
+A Bug's Life	        John Lasseter
+Toy Story 2	            John Lasseter
+Monsters, Inc.	        Pete Docter
+Finding Nemo	        Andrew Stanton
+The Incredibles	        Brad Bird
+Cars	                John Lasseter
+Ratatouille	            Brad Bird
+WALL-E	                Andrew Stanton
+Up	                    Pete Docter
+Toy Story 3	            Lee Unkrich
+Cars 2	                John Lasseter
+Brave	                Brenda Chapman
+Monsters University	    Dan Scanlon
+
+
+
+4. Find the title and year of each film
+# SELECT title, year FROM Movies;
+Output:
+title	            year
+Toy Story	        1995
+A Bug's Life	    1998
+Toy Story 2	        1999
+Monsters, Inc.	    2001
+Finding Nemo	    2003
+The Incredibles	    2004
+Cars	            2006
+Ratatouille	        2007
+WALL-E	            2008
+Up	                2009
+Toy Story 3	        2010
+Cars 2	            2011
+Brave	            2012
+Monsters University	2013
+
+5. Find all the information about each film.
+# SELECT * FROM Movies;
+Output:
+Table will be outputted.
+
+II. Queries with constraints:
+
+SELECT col1, col2, ... FROM Table WHERE
+condition1 AND/OR condition2....;
+
+Conditions may include:
+
+Operator	                    Condition	                                            SQL Example
+=, !=, <, <=, >, >=	            Standard numerical operators	                        col_name != 4
+BETWEEN … AND …	                Number is within range of two values (inclusive)	    col_name BETWEEN 1.5 AND 10.5
+NOT BETWEEN … AND …	            Number is not within range of two values (inclusive)	col_name NOT BETWEEN 1 AND 10
+IN (…)	                        Number exists in a list	                                col_name IN (2, 4, 6)
+NOT IN (…)	                    Number does not exist in a list	                        col_name NOT IN (1, 3, 5)
+=	                            Case sensitive exact string comparison              	col_name = "abc"
+!= or <>	                    Case sensitive exact string inequality comparison	    col_name != "abcd"
+LIKE	                        Case insensitive exact string comparison	            col_name LIKE "ABC"
+NOT LIKE	                    Case insensitive exact string inequality comparison	    col_name NOT LIKE "ABCD"
+%	                            Used anywhere in a string to match a sequence of zero or more characters (only with LIKE or NOT LIKE)	col_name LIKE "%AT%"
+(matches "AT", "ATTIC", "CAT" or even "BATS")
+_	                            Used anywhere in a string to match a single character (only with LIKE or NOT LIKE)	col_name LIKE "AN_"
+(matches "AND", but not "AN")
+IN (…)	                        String exists in a list	                                col_name IN ("A", "B", "C")
+NOT IN (…)	                    String does not exist in a list	                        col_name NOT IN ("D", "E", "F")
+
+Example Questions:
+
+1. Find the movie with row id = 6.
+# SELECT Title FROM Movies where id = 6;
+Output:
+The Incredibles
+
+2. Find the movies released in the years between 2000 and 2009.
+# SELECT Title FROM Movies WHERE Year BETWEEN 2000 AND 2010;
+Output:
+title
+Monsters, Inc.
+Finding Nemo
+The Incredibles
+Cars
+Ratatouille
+WALL-E
+Up
+Toy Story 3
+
+3. Find the movies not released in the years between 2000 and 2010
+# SELECT Title FROM Movies WHERE Year NOT BETWEEN 2000 AND 2010;
+Output:
+title
+Toy Story
+A Bug's Life
+Toy Story 2
+Cars 2
+Brave
+Monsters University
+
+4. Find the first 5 Pixar movies and their release year
+# SELECT Title, Year FROM Movies WHERE id <= 5;
+Output:
+title	            year
+Toy Story	        1995
+A Bug's Life	    1998
+Toy Story 2	        1999
+Monsters, Inc.	    2001
+Finding Nemo	    2003
+
+5. Find all Toy Story Movies.
+# SELECT Title FROM movies WHERE Title LIKE "%Toy Story%";
+Output:
+Toy Story
+Toy Story 2
+Toy Story 3
+
+6. Find all movies directed by John Lasseter.
+# SELECT Title FROM movies WHERE Director  = "John Lasseter";
+Output:
+Toy Story
+A Bug's Life
+Toy Story 2
+Cars
+Cars 2
+
+7. Find all the movies (and director) not directed by John Lasseter
+# SELECT Title, Director FROM movies WHERE Director  != "John Lasseter";
+Output:
+Monsters, Inc.	        Pete Docter
+Finding Nemo	        Andrew Stanton
+The Incredibles	        Brad Bird
+Ratatouille         	Brad Bird
+WALL-E	                Andrew Stanton
+Up	                    Pete Docter
+Toy Story 3	            Lee Unkrich
+Brave	                Brenda Chapman
+Monsters University	    Dan Scanlon
+WALL-G	                Brenda Chapman
+
+8. Find all the WALL-* movies 
+# SELECT Title FROM movies WHERE Title LIKE "%WALL-%";
+Output:
+WALL-E
+WALL-G
