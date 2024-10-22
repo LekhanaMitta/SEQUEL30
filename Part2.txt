@@ -1,0 +1,179 @@
+21st Oct '24:
+
+I. Multi-table queries with INNER JOIN:
+
+SELECT col1, col2, ... FROM table1 
+INNER JOIN table2 ON table1.col_i = table2.col_j
+WHERE condition1, condition2 ORDER BY col_name 
+LIMIT num_limit OFFSET num_offset;
+
+Table1: Movies
+
+id	title	            director	        year	length_minutes
+1	Toy Story	        John Lasseter	    1995	81
+2	A Bug's Life	    John Lasseter	    1998	95
+3	Toy Story 2	        John Lasseter	    1999	93
+4	Monsters, Inc.	    Pete Docter	        2001	92
+5	Finding Nemo	    Andrew Stanton	    2003	107
+6	The Incredibles	    Brad Bird	        2004	116
+7	Cars	            John Lasseter	    2006	117
+8	Ratatouille	        Brad Bird	        2007	115
+9	WALL-E	            Andrew Stanton	    2008	104
+10	Up	                Pete Docter	        2009	101
+11	Toy Story 3	        Lee Unkrich	        2010	103
+12	Cars 2	            John Lasseter	    2011	120
+13	Brave	            Brenda Chapman	    2012	102
+14	Monsters University	Dan Scanlon	        2013	110
+
+Table2: Boxoffice
+
+movie_id	rating	    domestic_sales	    international_sales
+5	        8.2	        380843261	        555900000
+14	        7.4	        268492764	        475066843
+8	        8	        206445654	        417277164
+12	        6.4	        191452396	        368400000
+3	        7.9	        245852179	        239163000
+6	        8	        261441092	        370001000
+9	        8.5	        223808164	        297503696
+11	        8.4	        415004880	        648167031
+1	        8.3	        191796233	        170162503
+7	        7.2	        244082982	        217900167
+10	        8.3	        293004164	        438338580
+4	        8.1	        289916256	        272900000
+2	        7.2	        162798565	        200600000
+13	        7.2	        237283207	        301700000
+
+1. Find the domestic and international sales for each movie 
+# SELECT Title, Domestic_sales, International_sales FROM Movies 
+INNER JOIN ON Boxoffice WHERE Movies.id = Boxoffice.movie_id;
+Output:
+title	                domestic_sales	        international_sales
+Finding Nemo	        380843261	            555900000
+Monsters University	    268492764	            475066843
+Ratatouille	            206445654	            417277164
+Cars 2	                191452396	            368400000
+Toy Story 2         	245852179	            239163000
+The Incredibles     	261441092	            370001000
+WALL-E	                223808164	            297503696
+Toy Story 3         	415004880	            648167031
+Toy Story	            191796233	            170162503
+Cars	                244082982	            217900167
+Up                  	293004164	            438338580
+Monsters, Inc.	        289916256	            272900000
+A Bug's Life	        162798565	            200600000
+Brave	                237283207	            301700000
+
+2. Show the sales numbers for each movie that did better internationally rather than domestically
+# SELECT Title, Domestic_sales, International_sales FROM Movies 
+INNER JOIN Boxoffice ON Movies.id = Boxoffice.movie_id 
+WHERE International_sales > Domestic_sales;
+Output:
+title	                domestic_sales	    international_sales
+Finding Nemo	        380843261	        555900000
+Monsters University	    268492764	        475066843
+Ratatouille	            206445654	        417277164
+Cars 2	                191452396	        368400000
+The Incredibles     	261441092	        370001000
+WALL-E              	223808164	        297503696
+Toy Story 3         	415004880	        648167031
+Up	                    293004164	        438338580
+A Bug's Life	        162798565	        200600000
+Brave	                237283207	        301700000
+
+3. List all the movies by their ratings in descending order
+# SELECT Title FROM Movies INNER JOIN 
+Boxoffice ON Movies.id = Boxoffice.movie_id ORDER BY Rating DESC;
+Output:
+title
+WALL-E
+Toy Story 3
+Toy Story
+Up
+Finding Nemo
+Monsters, Inc.
+Ratatouille
+The Incredibles
+Toy Story 2
+Monsters University
+Cars
+A Bug's Life
+Brave
+Cars 2
+
+II. OUTER JOINs:
+
+SELECT col1, col2, ... FROM table1 
+INNER/ LEFT/ RIGHT/ OUTER table2
+ON table1.id = table2.id WHERE condition1, condition2
+ORDER BY col_name ASC/DESC LIMIT num_limit OFFSET num_offset;
+
+Table : Buildings
+building_name	capacity
+1e	            24
+1w	            32
+2e	            16
+2w	            20
+
+Table: Employees
+role	    name	        building	years_employed
+Engineer	Becky A.	    1e	        4
+Engineer	Dan B.	        1e	        2
+Engineer	Sharon F.	    1e	        6
+Engineer	Dan M.	        1e	        4
+Engineer	Malcom S.	    1e	        1
+Artist	    Tylar S.	    2w	        2
+Artist	    Sherman D.	    2w	        8
+Artist	    Jakob J.	    2w	        6
+Artist	    Lillia A.	    2w	        7
+Artist	    Brandon J.	    2w	        7
+Manager	    Scott K.	    1e	        9
+Manager	    Shirlee M.	    1e	        3
+Manager	    Daria O.	    2w	        6
+
+1. Find the list of all buildings that have employees
+# SELECT DISTINCT Building FROM employees;
+Output:
+1e
+2w
+
+2. Find the list of all buildings and their capacity
+# SELECT * FROM Buildings;
+Output:
+building_name	capacity
+1e	            24
+1w	            32
+2e	            16
+2w	            20
+
+3. List all buildings and the distinct employee roles in each building (including empty buildings)
+# SELECT DISTINCT building_name, role 
+FROM buildings 
+  LEFT JOIN employees
+    ON building_name = building;
+Output:
+building_name	role
+1e	            Engineer
+1e	            Manager
+1w	
+2e	
+2w	            Artist
+2w	            Manager
+
+III. NULL Values
+
+SELECT col1, col2,... FROM table1 WHERE column
+IS/ IS NOT NULL AND/OR condition1, ....;
+
+1. Find the name and role of all employees who have not been assigned to a building
+# SELECT Name, Role FROM employees WHERE Building IS NULL;
+Output:
+name	    role
+Yancy I.	Engineer
+Oliver P.	Artist
+
+2. Find the names of the buildings that hold no employees
+# SELECT Building_name FROM Buildings LEFT JOIN Employees ON
+Building_name = Building WHERE Building IS NULL;
+Output:
+1w 
+2e

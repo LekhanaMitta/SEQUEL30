@@ -319,4 +319,63 @@ Output:
 Chicago	2718782
 Houston	2195914
 
+IV. Queries with expressions:
+
+SELECT col_expression AS expr_description, …
+FROM mytable;
+
+Using Movies, Boxoffice tables:
+
+1. List all movies and their combined sales in millions of dollars 
+# SELECT Title, (Domestic_sales + International_sales)/1000000 
+FROM movies LEFT JOIN Boxoffice ON id = Movie_id;
+Output:
+title	            (Domestic_sales + International_sales)/1000000
+Toy Story	        361.958736
+A Bug's Life	    363.398565
+Toy Story 2	        485.015179
+Monsters, Inc.	    562.816256
+Finding Nemo	    936.743261
+The Incredibles	    631.442092
+Cars	            461.983149
+Ratatouille	        623.722818
+WALL-E	            521.31186
+Up	                731.342744
+Toy Story 3	        1063.171911
+Cars 2	            559.852396
+Brave	            538.983207
+Monsters University	743.559607
+
+2. List all movies and their ratings in percent
+#  SELECT Title, rating*10 FROM movies LEFT JOIN Boxoffice ON id = Movie_id;
+Output:
+title	                rating*10
+Toy Story	            83
+A Bug's Life	        72
+Toy Story 2	            79
+Monsters, Inc.	        81
+Finding Nemo	        82
+The Incredibles	        80
+Cars	                72
+Ratatouille         	80
+WALL-E	                85
+Up	                    83
+Toy Story 3	            84
+Cars 2	                64
+Brave	                72
+Monsters University	    74
+
+3. List all movies that were released on even number years 
+# SELECT Title FROM movies LEFT JOIN Boxoffice ON id = Movie_id WHERE Year%2==0;
+Output:
+title
+A Bug's Life
+The Incredibles
+Cars
+WALL-E
+Toy Story 3
+Brave
+
+
+
 
