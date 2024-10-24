@@ -1,0 +1,121 @@
+# 22nd Oct '24
+
+I. Queries with aggregates
+
+SELECT Agg_Fun(col) AS agg_description FROM table_name WHERE condition1,..;
+
+
+Function	    Description
+COUNT(*), 
+COUNT(column)	A common function used to counts the number of rows in the group if no column name is specified. Otherwise, count the number of rows in the group with non-NULL values in the specified column.
+MIN(column)	    Finds the smallest numerical value in the specified column for all rows in the group.
+MAX(column)	    Finds the largest numerical value in the specified column for all rows in the group.
+AVG(column)	    Finds the average numerical value in the specified column for all rows in the group.
+SUM(column)	    Finds the sum of all numerical values in the specified column for the rows in the group.
+
+GROUP BY Clause as aggregate function:
+SELECT Agg_Fun(col) AS agg_description FROM table_name WHERE condition1,.. GROUP BY col; 
+
+Use Employees table:
+
+Table: Employees
+role	    name	        building	years_employed
+Engineer	Becky A.	    1e	        4
+Engineer	Dan B.	        1e	        2
+Engineer	Sharon F.	    1e	        6
+Engineer	Dan M.	        1e	        4
+Engineer	Malcom S.	    1e	        1
+Artist	    Tylar S.	    2w	        2
+Artist	    Sherman D.	    2w	        8
+Artist	    Jakob J.	    2w	        6
+Artist	    Lillia A.	    2w	        7
+Artist	    Brandon J.	    2w	        7
+Manager	    Scott K.	    1e	        9
+Manager	    Shirlee M.	    1e	        3
+Manager	    Daria O.	    2w	        6
+
+1. Find the longest time that an employee has been at the studio
+# SELECT MAX(years_employed) FROM Employees;
+Output:
+9
+
+2. For each role, find the average number of years employed by employees in that role
+# SELECT Role, avg(years_employed) FROM employees GROUP BY Role;
+Output:
+role	    avg(years_employed)
+Artist	    6
+Engineer	3.4
+Manager	    6
+
+3. Find the total number of employee years worked in each building
+# SELECT Building, total(years_employed) FROM employees GROUP BY Building;
+Output:
+building	total(years_employed)
+1e	        29
+2w	        36
+
+II. Aggregate Function using HAVING Clause:
+
+SELECT group_by_column, AGG_FUNC(column_expression) AS aggregate_result_alias, …
+FROM mytable
+WHERE condition
+GROUP BY column
+HAVING group_condition;
+
+1. Find the number of Artists in the studio (without a HAVING clause) 
+# SELECT count(Role) FROM employees WHERE Role = "Artist";
+Output:
+5
+
+2. Find the number of Employees of each role in the studio
+# SELECT Role, count(Role) FROM employees GROUP BY Role;
+Output:
+role	    count(Role)
+Artist	    5
+Engineer	5
+Manager 	3
+
+3. Find the total number of years employed by all Engineers
+# SELECT Role, Sum(Years_employed) FROM employees GROUP BY Role HAVING Role = "Engineer";
+Output:
+role	    Sum(Years_employed)
+Engineer	17
+
+III. Order of execution of Query:
+SELECT DISTINCT column, AGG_FUNC(column_or_expression), …
+FROM mytable
+    JOIN another_table
+      ON mytable.column = another_table.column
+    WHERE constraint_expression
+    GROUP BY column
+    HAVING constraint_expression
+    ORDER BY column ASC/DESC
+    LIMIT count OFFSET COUNT;
+
+Use Movies and Boxoffice tables here:
+
+1. Find the number of movies each director has directed 
+# SELECT Director, count(Title) FROM movies GROUP BY Director ;
+Output:
+director	        count(Title)
+Andrew Stanton	    2
+Brad Bird	        2
+Brenda Chapman	    1
+Dan Scanlon	        1
+John Lasseter	    5
+Lee Unkrich	        1
+Pete Docter	        2
+
+2. Find the total domestic and international sales that can be attributed to each director 
+# SELECT Director, sum(domestic_sales+international_sales) FROM Boxoffice 
+    INNER JOIN Movies ON id = Movie_id GROUP BY Director;
+Output:
+director	        sum(domestic_sales+international_sales)
+Andrew Stanton	    1458055121
+Brad Bird	        1255164910
+Brenda Chapman	    538983207
+Dan Scanlon	        743559607
+John Lasseter	    2232208025
+Lee Unkrich	        1063171911
+Pete Docter	        1294159000
+
