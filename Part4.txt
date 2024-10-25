@@ -1,0 +1,117 @@
+I. Inserting into the table
+
+INSERT INTO mytable col1, col2,.. values
+(val11, val12, ...)
+(val21, val22, ...)...;
+
+INSERT INTO mytable VALUES (val11, val12, ...), (val21, val22,...)..;
+
+Use Movies and Boxoffice tables here.
+
+1. Add the studio's new production, Toy Story 4 to the list of movies (you can use any director)
+# INSERT INTO Movies (Title, Director) VALUES ("Toy Story 4", "John Lasseter");
+
+2. Toy Story 4 has been released to critical acclaim! It had a rating of 8.7, and made 340 million domestically and 270 million internationally.
+ Add the record to the BoxOffice table. 
+ # INSERT INTO Boxoffice (Movie_id, rating, domestic_sales, international_sales)
+     VALUES (15, 8.7, 340000000, 270000000);
+
+
+II. Updating rows in the table
+
+UPDATE mytable SET val11 = new_val11, val12=new_val21, ...
+WHERE condition1, condition2,...;
+
+1. The director for A Bug's Life is incorrect, it was actually directed by John Lasseter
+# UPDATE Movies SET Director = "John Lasseter" WHERE Title = "A Bug's Life";
+
+2. The year that Toy Story 2 was released is incorrect, it was actually released in 1999
+# UPDATE Movies SET Year = 1999 WHERE Title = "Toy Story 2";
+
+3. Both the title and director for Toy Story 8 is incorrect! The title should be "Toy Story 3" and it was directed by Lee Unkrich
+# UPDATE Movies SET Title = "Toy Story 3", Director = "Lee Unkrich" WHERE Title = "Toy Story 8";
+
+III. Delete rows in the table
+
+DELETE FROM mytable WHERE condition;
+
+1. This database is getting too big, lets remove all movies that were released before 2005.
+# DELETE FROM Movies WHERE Year < 2005;
+
+2. Andrew Stanton has also left the studio, so please remove all movies directed by him.
+# DELETE FROM Movies WHERE Director = "Andrew Stanton";
+
+IV. Creating table if doesn't exist.
+
+CREATE TABLE IF NOT EXISTS mytable (
+    column DataType TableConstraint DEFAULT default_value,
+    another_column DataType TableConstraint DEFAULT default_value,
+    …
+);
+
+Data type	                        Description
+INTEGER, BOOLEAN	                The integer datatypes can store whole integer values like the count of a number or an age. 
+                                    In some implementations, the boolean value is just represented as an integer value of just 0 or 1.
+FLOAT, DOUBLE, REAL	                The floating point datatypes can store more precise numerical data like measurements or fractional values. 
+                                    Different types can be used depending on the floating point precision required for that value.
+CHARACTER(num_chars), VARCHAR(num_chars), TEXT	
+                                    The text based datatypes can store strings and text in all sorts of locales. 
+                                    The distinction between the various types generally amount to underlaying efficiency of the database when working with these columns.
+                                    Both the CHARACTER and VARCHAR (variable character) types are specified with the max number of characters that they can store 
+                                    (longer values may be truncated), so can be more efficient to store and query with big tables.
+
+DATE, DATETIME	                    SQL can also store date and time stamps to keep track of time series and event data. 
+                                    They can be tricky to work with especially when manipulating data across timezones.
+BLOB	                            Finally, SQL can store binary data in blobs right in the database. 
+                                    These values are often opaque to the database, so you usually have to store them with the right metadata to requery them.
+
+Table Constraints:
+
+Constraint	        Description
+PRIMARY KEY	        This means that the values in this column are unique, and each value can be used to identify a single row in this table.
+AUTOINCREMENT	    For integer values, this means that the value is automatically filled in and incremented with each row insertion. 
+                    Not supported in all databases.
+UNIQUE	            This means that the values in this column have to be unique, so you can't insert another row with the same value in this column as another row in the table. 
+                    Differs from the `PRIMARY KEY` in that it doesn't have to be a key for a row in the table.
+NOT NULL	        This means that the inserted value can not be `NULL`.
+CHECK (expression)	This allows you to run a more complex expression to test whether the values inserted are valid. 
+FOREIGN KEY	        This is a consistency check which ensures that each value in this column corresponds to another value in a column in another table.
+
+1. Create a new table named Database with the following columns:
+– Name A string (text) describing the name of the database
+– Version A number (floating point) of the latest version of this database
+– Download_count An integer count of the number of times this database was downloaded
+
+This table has no constraints.
+
+# CREATE TABLE IF NOT EXISTS Database(
+Name STRING PRIMARY KEY,
+Version FLOAT,
+Download_count INTEGER);
+
+V. Altering the table
+
+(1). Add new column
+ALTER TABLE mytable ADD column DataType OptionalTableConstraint DEFAULT default_value;
+
+(2) Removing columns
+ALTER TABLE mytable DROP column_to_be_deleted;
+
+(3) ALTER TABLE mytable RENAME TO new_table_name;
+
+1. Add a column named Aspect_ratio with a FLOAT data type to store the aspect-ratio each movie was released in. 
+# ALTER TABLE Movies ADD Aspect_ratio FLOAT DEFAULT 0.0;
+
+2. Add another column named Language with a TEXT data type to store the language that the movie was released in. 
+Ensure that the default for this language is English.
+# ALTER TABLE Movies ADD Language VARCHAR DEFAULT "English";
+
+VI. Drop the tables.
+
+DROP TABLE IF EXISTS mytable;
+
+1. We've sadly reached the end of our lessons, lets clean up by removing the Movies table
+# DROP TABLE Movies;
+
+2. And drop the BoxOffice table as well
+# DROP TABLE Boxoffice;
